@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+     
+  </div>
+  <style>
+    .row {
+      border: 1px solid rgba(0,0,0,.125);
+      padding: 10px;
+      margin: 10px 0;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    let itemTmp = (item) => { 
+      return `<div class="row align-items-center">
+                <div class="col-sm"><img src="${item.img}" width="100"></div>
+                <div class="col-sm"><a href="${item.link}" target="_blank">${item.title}</a></div>
+                <div class="col-sm">${item.price}</div>
+            </div>`
+    };
+
+    $.get('/api/getfavorites').then((payload) =>{
+      if (!payload.length) {
+        $('.container').html('<h3>No data</h3>');
+      }
+      payload.forEach((item) => {
+        $('.container').append(itemTmp(item));
+      });
+    });
+  </script>
+</body>
+</html>
