@@ -2,18 +2,21 @@ const path = require('path');
 
 const pathModules = path.resolve(__dirname);
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const TerserPlugin = require('terser-webpack-plugin');
+
 module.exports = {
 	context: path.resolve(__dirname),
 	entry: {
-		App: './src/index.js'
+		content_scripts: './src/index.js',
+		popup: './src/popup'
 	},
 	output: {
 		path: path.resolve(__dirname, './build/'),
-		filename: 'content_scripts.js',
+		filename: '[name].js',
 		chunkFilename: '[name].js'
 	},
 	watch: true,
-	mode: 'development',
 	resolve: {
 		modules: [pathModules,'node_modules'],
 	},  
@@ -24,34 +27,54 @@ module.exports = {
 				use: {
 					loader: 'babel-loader'
 				}
+			},
+			{ 
+				test: /\.(sa|sc|c)ss$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+        ],
       }
 		]
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'async',
-      minSize: 30000,
-      maxSize: 0,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
-      name: true,
-      cacheGroups: {
-        vendors: {
-          test: /node_modules/,
-          chunks: "initial",
-          name: "vendor",
-          priority: 10,
-          enforce: true
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        }
-      }
-    }
 	},
-	devtool: 'source-map'
+	mode: 'production',
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: 4,
+        terserOptions: {
+          drop_console: true,
+          drop_debugger: true,
+          module: true,
+          mangle: true,
+          passes: 2, // or higher,
+          toplevel: true
+        },
+      }),
+    ],
+  },
+	plugins: [
+    new MiniCssExtractPlugin()
+  ],
+  // optimization: {
+  //   splitChunks: {
+  //     chunks: 'async',
+  //     minSize: 30000,
+  //     maxSize: 0,
+  //     minChunks: 1,
+  //     maxAsyncRequests: 5,
+  //     maxInitialRequests: 3,
+  //     automaticNameDelimiter: '~',
+  //     name: true,
+  //     cacheGroups: {
+  //       default: {
+  //         minChunks: 2,
+  //         priority: -20,
+  //         reuseExistingChunk: true
+  //       }
+  //     }
+  //   }
+	// },
+	// devtool: 'source-map'
 };

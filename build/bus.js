@@ -1,8 +1,7 @@
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-  var url = "";
 
   if (request.action === 'add_to_favorite') {
-    fetch('http://aggregator.com/api/addtofavorite?page=' + request.page)
+    fetch('https://www.lamoda.ru/apix/catalog/products/?skus=' + request.article)
       .then(response => response.json())
       .then(json => sendResponse(json))
       .catch(function(error) {

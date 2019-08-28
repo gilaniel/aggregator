@@ -12,7 +12,8 @@
     "default_icon": {
       "19": "icon.png",
       "38": "icon.png"
-    }
+    },
+    "default_popup": "popup.html"
   },
   "background": {
     "scripts": [
@@ -30,10 +31,12 @@
       "run_at": "document_end"
     }
   ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "web_accessible_resources": ["js/jquery.min.js"],
   "permissions": [
     "http://localhost/",
     "http://aggregator.com/",
+    "https://www.lamoda.ru/",
     "tabs",
     "webRequest",
     "activeTab",
@@ -43,5 +46,5 @@
     "pageCapture",
     "storage",
     "topSites"
-]
+  ]
 }
