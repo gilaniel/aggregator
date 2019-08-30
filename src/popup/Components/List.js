@@ -37,7 +37,9 @@ class List extends Component {
     chrome.storage.sync.set({'collection': this.state.collection});
 
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, {sku: sku}, () => {});
+      chrome.tabs.sendMessage(tabs[0].id, {type: 'remove', sku: sku}, (resp) => {
+        console.log(resp.body);
+      });
     });
   }
 

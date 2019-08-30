@@ -18,12 +18,12 @@ export default function() {
     });
   }
 
-  const setButtonProps = () => {
+  const apllyButtonProps = () => {
     $('.js-add-to-favorite-btn').text(button.text);
     $('.js-add-to-favorite-btn').prop('disabled', button.disabled);
   }
 
-  const handleCheckInFavorites = (collection, product) => {
+  const handleCheckInFavorites = (collection = [], product) => {
     const item = collection.find((element) => {
       return element.sku === product.sku;
     });
@@ -49,7 +49,7 @@ export default function() {
       button.text = 'Added to favorite';
       button.disabled = true;
 
-      setButtonProps();
+      apllyButtonProps();
     }
 
     chrome.storage.sync.set({'collection': collection});
@@ -70,10 +70,8 @@ export default function() {
 
   handleAddButton();
 
-  $(function(){
-    $('.js-add-to-favorite-btn').on('click', () => {
-      addToFavorite(location.href);
-    });
+  $('body').on('click', '.js-add-to-favorite-btn', () => {
+    addToFavorite(location.href);
   });
 
   chrome.runtime.onMessage.addListener(
@@ -81,7 +79,10 @@ export default function() {
       button.text = 'Add to favorite';
       button.disabled = false;
 
-      setButtonProps();
+      if (message.type === 'remove') {
+        sendResponse({body: 'ok'});
+        apllyButtonProps();
+      }
     }
   );
 }
